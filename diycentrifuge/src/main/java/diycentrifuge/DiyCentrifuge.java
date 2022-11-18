@@ -558,6 +558,7 @@ public class DiyCentrifuge {
 
 	private void motorSpinCheck() {
 		in3.low();
+		in4.low();
 		in4.high();
 		enb.setDutyCycle(DiyCentrifuge.MIN_STARTUP_DUTYCYCLE);
 		enb.on();
