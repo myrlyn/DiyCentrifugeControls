@@ -31,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.pi4j.context.Context;
 import com.pi4j.extension.Plugin;
 import com.pi4j.io.gpio.digital.DigitalOutput;
+import com.pi4j.io.gpio.digital.DigitalState;
 import com.pi4j.io.i2c.I2C;
 import com.pi4j.io.i2c.I2CConfig;
 import com.pi4j.io.i2c.I2CProvider;
@@ -549,10 +550,34 @@ public class DiyCentrifuge {
 	private static void pinSetup() {
 		I2CProvider i2CProvider = ctx.provider("linuxfs-i2c");
 		I2CConfig i2cConfig = I2C.newConfigBuilder(ctx).id("TCA9534").bus(1).device(0x3f).build();
-		in3 = ctx.dout().create(16);
-		in4 = ctx.dout().create(20);
-		PwmConfig enconf = Pwm.newConfigBuilder(ctx).address(19).id("en").name("en").pwmType(PwmType.SOFTWARE)
-				.provider("pigpio-pwm").initial(0).shutdown(0).build();
+		
+		in3 = ctx.create(DigitalOutput.newConfigBuilder(ctx)
+				.address(16)
+				.id("in3")
+				.name("in3")
+				.initial(DigitalState.LOW)
+				.shutdown(DigitalState.LOW)
+				.provider("pigpio-digital-output")
+				.build()
+			);
+		in4 = ctx.create(DigitalOutput.newConfigBuilder(ctx)
+				.address(20)
+				.id("in4")
+				.name("in4")
+				.initial(DigitalState.LOW)
+				.shutdown(DigitalState.LOW)
+				.provider("pigpio-digital-output")
+				.build()
+			);
+		PwmConfig enconf = Pwm.newConfigBuilder(ctx)
+				.address(19)
+				.id("en")
+				.name("en")
+				.pwmType(PwmType.SOFTWARE)
+				.provider("pigpio-pwm")
+				.initial(0)
+				.shutdown(0)
+				.build();
 		enb = ctx.create(enconf);
 	}
 
